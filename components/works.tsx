@@ -2,16 +2,16 @@
 
 import {
   type LucideIcon,
-  Utensils,
+  Plane,
+  Briefcase,
+  Speaker,
   Bot,
-  LayoutDashboard,
+  NotebookPen,
+  Clapperboard,
+  GraduationCap,
   ShoppingBag,
-  Globe,
-  Scissors,
-  Gamepad2,
-  Dumbbell,
-  Calendar,
-  Database,
+  Rocket,
+  Heart,
 } from "lucide-react";
 import { useLang } from "@/components/lang-provider";
 import {
@@ -20,26 +20,26 @@ import {
 } from "@/components/ui/project-carousel";
 
 /**
- * Метаданные 10 работ. ТЕКСТ (название/описание) правится в lib/i18n.ts → works[].
- * Здесь правятся ссылка, тег-технология, иконка и скриншот — по индексу 0..9.
+ * Метаданные 10 наших работ. ТЕКСТ (название/описание) правится в lib/i18n.ts → works[].
+ * Здесь правятся ссылка, тег-категория, иконка и скриншот — по индексу 0..9.
  *
- *  • href — ссылка на живую работу. Пока стоит "#" (кнопка ни на что не ведёт).
- *           Замени на реальный URL, напр. "https://moy-proekt.vercel.app".
- *  • img  — скриншот. Положи файл в /public/works/ и укажи путь,
- *           напр. img: "/works/coffee.png". Без него рисуется брендовый плейсхолдер.
+ *  • href — ссылка на живой проект (открывается в новой вкладке).
+ *  • img  — скриншот карточки в /public/works/ (1200×784, формат карточки 1.53:1).
+ *  • tag  — короткая категория. Можно заменить на инструмент (Lovable, Claude…), если нужно.
  *  • Icon — любая иконка из lucide-react.
+ *  Порядок здесь и в lib/i18n.ts → works[] должен совпадать.
  */
 const META: { Icon: LucideIcon; tag: string; href: string; img?: string }[] = [
-  { Icon: Utensils, tag: "Lovable", href: "#" }, // 0 — лендинг для кофейни
-  { Icon: Bot, tag: "Python", href: "#" }, // 1 — бот для записи
-  { Icon: LayoutDashboard, tag: "Supabase", href: "#" }, // 2 — мини-CRM
-  { Icon: ShoppingBag, tag: "Next.js", href: "#" }, // 3 — интернет-магазин
-  { Icon: Globe, tag: "Claude", href: "#" }, // 4 — портфолио
-  { Icon: Scissors, tag: "Lovable", href: "#" }, // 5 — барбершоп
-  { Icon: Gamepad2, tag: "Telegram", href: "#" }, // 6 — бот-викторина
-  { Icon: Dumbbell, tag: "Vercel", href: "#" }, // 7 — фитнес-студия
-  { Icon: Calendar, tag: "21st.dev", href: "#" }, // 8 — сайт-афиша
-  { Icon: Database, tag: "Supabase", href: "#" }, // 9 — дашборд аналитики
+  { Icon: Plane,         tag: "Travel",   href: "https://meyman.app/",           img: "/works/meyman.jpg" },     // 0 — Meyman, travel-платформа
+  { Icon: Briefcase,     tag: "HR",       href: "https://opus-work.org/",        img: "/works/opus.jpg" },       // 1 — OPUS, поиск сотрудников
+  { Icon: Speaker,       tag: "Прокат",   href: "https://zvuk.kg/",              img: "/works/zvuk.jpg" },       // 2 — ZVUK.KG, аренда звука и света
+  { Icon: Bot,           tag: "Telegram", href: "https://t.me/MReviewerBot",     img: "/works/mreviewer.jpg" },  // 3 — MReviewer, бот для WB/Ozon
+  { Icon: NotebookPen,   tag: "EdTech",   href: "https://ruts-edu.online/login", img: "/works/ruts.jpg" },       // 4 — РОБ, электронный журнал
+  { Icon: Clapperboard,  tag: "Прокат",   href: "https://50kvartal.rent/",       img: "/works/50kvartal.jpg" },  // 5 — 50 Квартал, аренда оборудования
+  { Icon: GraduationCap, tag: "EdTech",   href: "https://akylzone.com/",         img: "/works/akylzone.jpg" },   // 6 — AkylZone, учебный центр
+  { Icon: ShoppingBag,   tag: "Магазин",  href: "https://neuronshop.store/",     img: "/works/neuronshop.jpg" }, // 7 — NeuronShop, интернет-магазин
+  { Icon: Rocket,        tag: "Бизнес",   href: "https://apkgz.org/",            img: "/works/apkgz.jpg" },      // 8 — Accelerate Prosperity KG
+  { Icon: Heart,         tag: "Telegram", href: "https://t.me/dom_matery_bot",   img: "/works/dom_matery.jpg" }, // 9 — Эне үйү, бот поддержки
 ];
 
 export function Works() {

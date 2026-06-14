@@ -259,7 +259,7 @@ export function ProjectCarousel({
       className={cn("relative", className)}
       role="region"
       aria-roledescription="карусель"
-      aria-label="Работы учеников"
+      aria-label="Наши работы"
       tabIndex={0}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
