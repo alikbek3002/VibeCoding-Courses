@@ -52,6 +52,8 @@ interface CardProps {
   reduce: boolean;
   openLabel: string;
   onActivate: () => void;
+  /** true, если только что был drag/swipe — тогда клик не должен открывать ссылку */
+  draggedRef: React.RefObject<boolean>;
 }
 
 const ProjectCard = React.memo(function ProjectCard({
@@ -60,6 +62,7 @@ const ProjectCard = React.memo(function ProjectCard({
   reduce,
   openLabel,
   onActivate,
+  draggedRef,
 }: CardProps) {
   const { isActive, visible, rotateY, x, z, scale, opacity, zIndex } =
     layout(offset);
@@ -81,8 +84,7 @@ const ProjectCard = React.memo(function ProjectCard({
           : { type: "spring", stiffness: 240, damping: 30 }
       }
       className={cn(
-        "absolute left-1/2 top-0 -ml-[150px] w-[300px] select-none",
-        isActive ? "cursor-default" : "cursor-pointer",
+        "absolute left-1/2 top-0 -ml-[150px] w-[300px] cursor-pointer select-none",
       )}
       style={{
         zIndex,
@@ -92,7 +94,7 @@ const ProjectCard = React.memo(function ProjectCard({
       }}
     >
       <div
-        className="flex h-[428px] flex-col overflow-hidden rounded-[20px] border bg-white"
+        className="relative flex h-[428px] flex-col overflow-hidden rounded-[20px] border bg-white"
         style={{
           borderColor: "#e6e8e2",
           boxShadow: isActive
@@ -182,31 +184,42 @@ const ProjectCard = React.memo(function ProjectCard({
               {project.tag}
             </span>
 
+            {/* визуальная подсказка «Открыть» — клик ловит оверлей-ссылка ниже */}
             <AnimatePresence>
               {isActive && (
-                <motion.a
-                  href={project.href}
-                  target={isExternal ? "_blank" : undefined}
-                  rel={isExternal ? "noopener noreferrer" : undefined}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (!isExternal) e.preventDefault();
-                  }}
+                <motion.span
                   initial={reduce ? false : { opacity: 0, x: 12 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={reduce ? undefined : { opacity: 0, x: 12 }}
-                  whileHover={reduce ? undefined : { y: -2 }}
-                  whileTap={reduce ? undefined : { scale: 0.96 }}
-                  className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-[13px] font-semibold text-white transition-colors"
+                  className="pointer-events-none inline-flex items-center gap-2 rounded-full px-4 py-2 text-[13px] font-semibold text-white"
                   style={{ background: INK }}
                 >
                   {openLabel}
                   <ExternalLink className="h-3.5 w-3.5" />
-                </motion.a>
+                </motion.span>
               )}
             </AnimatePresence>
           </div>
         </div>
+
+        {/* Вся активная карточка — одна большая ссылка на проект.
+            Свайп/перетаскивание карусели не открывает её (защита через draggedRef). */}
+        {isActive && (
+          <a
+            href={project.href}
+            target={isExternal ? "_blank" : undefined}
+            rel={isExternal ? "noopener noreferrer" : undefined}
+            aria-label={`${openLabel}: ${project.title}`}
+            onClick={(e) => {
+              if (draggedRef.current) {
+                e.preventDefault();
+                return;
+              }
+              if (!isExternal) e.preventDefault();
+            }}
+            className="absolute inset-0 z-10 rounded-[20px]"
+          />
+        )}
       </div>
     </motion.article>
   );
@@ -226,6 +239,8 @@ export function ProjectCarousel({
   const reduceMotion = useReducedMotion() ?? false;
   const [index, setIndex] = React.useState(0);
   const [paused, setPaused] = React.useState(false);
+  // true в течение drag/swipe — чтобы завершающий клик не открыл ссылку карточки
+  const draggedRef = React.useRef(false);
   const n = items.length;
 
   const go = React.useCallback(
@@ -281,7 +296,13 @@ export function ProjectCarousel({
         drag="x"
         dragConstraints={{ left: 0, right: 0 }}
         dragElastic={0.18}
-        onDragStart={() => setPaused(true)}
+        onPointerDownCapture={() => {
+          draggedRef.current = false;
+        }}
+        onDragStart={() => {
+          setPaused(true);
+          draggedRef.current = true;
+        }}
         onDragEnd={onDragEnd}
         className="relative mx-auto h-[452px] w-full"
         style={{ perspective: 1800, perspectiveOrigin: "50% 45%" }}
@@ -294,6 +315,7 @@ export function ProjectCarousel({
             reduce={reduceMotion}
             openLabel={openLabel}
             onActivate={() => jump(i)}
+            draggedRef={draggedRef}
           />
         ))}
       </motion.div>
