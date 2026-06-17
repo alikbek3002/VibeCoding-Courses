@@ -271,7 +271,10 @@ export function ProjectCarousel({
 
   return (
     <div
-      className={cn("relative", className)}
+      // overflow-hidden обрезает абсолютные карточки коверфлоу В ИСТОЧНИКЕ:
+      // их «вылет» больше не расширяет ширину секции и не даёт горизонтальный
+      // скролл страницы (универсально, в т.ч. на старых iOS Safari без overflow:clip).
+      className={cn("relative overflow-hidden", className)}
       role="region"
       aria-roledescription="карусель"
       aria-label="Наши работы"
@@ -321,7 +324,7 @@ export function ProjectCarousel({
       </motion.div>
 
       {/* стрелки */}
-      <div className="pointer-events-none absolute inset-x-0 top-[150px] z-40 flex items-center justify-between px-1 sm:px-2 md:-mx-4">
+      <div className="pointer-events-none absolute inset-x-0 top-[150px] z-40 flex items-center justify-between px-1 sm:px-2">
         <button
           type="button"
           aria-label="Предыдущая работа"
