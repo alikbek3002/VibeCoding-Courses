@@ -29,10 +29,10 @@ export function Header() {
         </a>
         <nav className="nav" aria-label="Навигация">
           <a href="#skills">{t.nav_skills}</a>
+          <a href="#team">{t.nav_team}</a>
+          <a href="#works">{t.nav_works}</a>
           <a href="#plans">{t.nav_plans}</a>
           <a href="#how">{t.nav_how}</a>
-          <a href="#works">{t.nav_works}</a>
-          <a href="#team">{t.nav_team}</a>
         </nav>
         <div className="hdr-act">
           <div className="lang" role="group" aria-label="Язык">

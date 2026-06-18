@@ -39,3 +39,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# QA tooling artifacts (Playwright MCP logs/snapshots)
+.playwright-mcp/
+
+# Случайные вложения, перетащенные из Telegram (симлинки на кэш macOS —
+# битые на сборке Vercel, ловят ENOENT и валят build)
+telegram-cloud-*

@@ -9,7 +9,10 @@ import { useLang } from "@/components/lang-provider";
 // Положи файл в /public/team/ и раскомментируй строку — появится фото
 // вместо буквы-инициала. Пока пусто → у всех показывается инициал.
 const PHOTOS: Record<string, string> = {
-  // "Муканбетов Аликбек": "/team/alikbek.jpg",
+  "Муканбетов Аликбек": "/team/alikbek-v2.jpg",
+  "Жусупбеков Эрбол": "/team/erbol.jpg",
+  "Бердибаев Чынгыз": "/team/chyngyz.jpg",
+  "Миртемиров Эмирхан": "/team/emirkhan.jpg",
 };
 
 // Секция «Команда» — слайдер с горизонтальной прокруткой. Карточки берутся

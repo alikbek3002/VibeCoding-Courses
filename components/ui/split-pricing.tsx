@@ -4,42 +4,67 @@ import { motion, useReducedMotion, type Variants } from "framer-motion";
 import { useLang } from "@/components/lang-provider";
 import { WHATSAPP_URL } from "@/lib/i18n";
 
-// Инлайн-галочка (без зависимости от lucide) — цвет наследуется из text-* через currentColor
-const CheckIcon = ({ className }: { className?: string }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="3"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden="true"
-    focusable="false"
-    className={className}
-  >
-    <path d="M20 6 9 17l-5-5" />
-  </svg>
+// Мини-заголовок секции внутри карточки тарифа
+const Label = ({ children }: { children: React.ReactNode }) => (
+  <p className="mono mt-6 text-[11.5px] font-medium uppercase tracking-[0.04em] text-[var(--acc-d)]">
+    {children}
+  </p>
 );
 
-const Feature = ({ children }: { children: React.ReactNode }) => (
-  <li className="flex items-start gap-3 text-[14.5px] leading-snug text-[var(--ink-2)]">
-    <span className="mt-px grid size-5 shrink-0 place-content-center rounded-full bg-[var(--acc)] text-white">
-      <CheckIcon className="size-[13px]" />
-    </span>
-    <span>{children}</span>
-  </li>
+type Week = { n: string; t: string; d: string };
+
+// Программа по неделям: акцентный номер + тема + короткое описание
+const Weeks = ({ items }: { items: readonly Week[] }) => (
+  <ol className="mt-3 grid gap-2.5">
+    {items.map((w, i) => (
+      <li key={i} className="flex gap-3">
+        <span className="mt-px grid size-[26px] shrink-0 place-content-center rounded-[2px] bg-[var(--acc)] font-display text-[12px] font-bold text-white">
+          {w.n}
+        </span>
+        <div className="min-w-0">
+          <p className="text-[14px] font-semibold leading-tight text-[var(--ink)]">
+            {w.t}
+          </p>
+          <p className="mt-0.5 text-[12.5px] leading-snug text-[var(--ink-3)]">
+            {w.d}
+          </p>
+        </div>
+      </li>
+    ))}
+  </ol>
+);
+
+// Чипы «что построишь» — белый фон + зелёная окантовка (виден на обеих карточках)
+const Chips = ({ items }: { items: readonly string[] }) => (
+  <div className="mt-3 flex flex-wrap gap-2">
+    {items.map((c, i) => (
+      <span
+        key={i}
+        className="rounded-[2px] border border-[color:rgba(16,185,129,.25)] bg-white px-2.5 py-1 text-[12px] font-medium text-[var(--acc-d)]"
+      >
+        {c}
+      </span>
+    ))}
+  </div>
+);
+
+// Теги инструментов — нейтральная окантовка
+const Tools = ({ items }: { items: readonly string[] }) => (
+  <div className="mt-3 flex flex-wrap gap-1.5">
+    {items.map((tool, i) => (
+      <span
+        key={i}
+        className="rounded-[2px] border border-[var(--line-2)] bg-white/60 px-2 py-[3px] text-[11px] text-[var(--ink-2)]"
+      >
+        {tool}
+      </span>
+    ))}
+  </div>
 );
 
 export function SplitPricing() {
   const { t } = useLang();
   const reduce = useReducedMotion();
-
-  // Две карточки-тарифа: «Стандарт» (1-й месяц) и «Про» (весь курс, 2 месяца, со скидкой).
-  const standardFeatures = [t.pls_f1, t.pls_f2, t.pls_f3, t.pls_f4];
-  const proFeatures = [t.plp_f1, t.plp_f2, t.plp_f3, t.plp_f4];
 
   const container: Variants = {
     hidden: {},
@@ -92,11 +117,22 @@ export function SplitPricing() {
           {t.pls_once}
         </p>
 
-        <ul className="mt-7 grid gap-3.5 font-sans">
-          {standardFeatures.map((f, i) => (
-            <Feature key={i}>{f}</Feature>
-          ))}
-        </ul>
+        <Label>{t.pl_prog_h}</Label>
+        <Weeks items={t.pls_weeks} />
+
+        <Label>{t.pl_built_h}</Label>
+        <Chips items={t.pls_built} />
+
+        <Label>{t.pl_tools_h}</Label>
+        <Tools items={t.pls_tools} />
+
+        {/* Лёгкий апселл к «Про» — заполняет карточку и подталкивает к полному курсу */}
+        <div className="mt-6 rounded-[2px] border border-dashed border-[color:rgba(16,185,129,.35)] bg-[var(--acc-soft)] px-4 py-3.5">
+          <p className="font-sans text-[12.5px] leading-[1.5] text-[var(--ink-2)]">
+            <span className="font-semibold text-[var(--acc-d)]">↗ </span>
+            {t.pls_upsell}
+          </p>
+        </div>
 
         <div className="mt-auto pt-7">
           <p className="border-t border-dashed border-[var(--line-2)] pt-[18px] font-sans text-[13.5px] leading-[1.45] text-[var(--ink-3)]">
@@ -153,14 +189,22 @@ export function SplitPricing() {
           {t.plp_once}
         </p>
 
-        <p className="mono mt-7 text-[12px] font-medium text-[var(--acc-d)]">
-          {t.plp_incl}
+        {/* Месяц 1 — входит целиком (кратко) */}
+        <Label>{t.plp_m1_h}</Label>
+        <p className="mt-2 font-sans text-[13px] leading-snug text-[var(--ink-2)]">
+          {t.plp_m1_note}
         </p>
-        <ul className="mt-3.5 grid gap-3.5 font-sans">
-          {proFeatures.map((f, i) => (
-            <Feature key={i}>{f}</Feature>
-          ))}
-        </ul>
+        <Chips items={t.pls_built} />
+
+        {/* Месяц 2 — про-уровень (подробно) */}
+        <Label>{t.plp_m2_h}</Label>
+        <Weeks items={t.plp_weeks} />
+
+        <Label>{t.pl_built_h}</Label>
+        <Chips items={t.plp_built} />
+
+        <Label>{t.pl_tools_h}</Label>
+        <Tools items={t.plp_tools} />
 
         <div className="mt-auto pt-7">
           <p className="border-t border-dashed border-[var(--line-2)] pt-[18px] font-sans text-[13.5px] leading-[1.45] text-[var(--ink-3)]">
