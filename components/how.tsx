@@ -13,17 +13,24 @@ export function How() {
   ];
 
   return (
-    <section className="sec" id="how">
+    <section className="sec how-sec" id="how">
       <div className="wrap how-wrap">
-        <header className="sec-head rv">
+        <header className="sec-head how-head rv">
           <p className="kick mono">{t.how_kick}</p>
           <h2 className="sec-h">{t.how_h}</h2>
+          <p className="sec-sub">{t.how_sub}</p>
+          <div className="how-badges mono" aria-label="course format">
+            {t.how_badges.map((badge) => (
+              <span key={badge}>{badge}</span>
+            ))}
+          </div>
         </header>
-        <ol className="steps">
+
+        <ol className="journey">
           {steps.map((s) => (
-            <li className="step rv" key={s.n}>
-              <span className="step-n mono">{s.n}</span>
-              <div className="step-b">
+            <li className="journey-step rv" key={s.n}>
+              <span className="journey-n mono">{s.n}</span>
+              <div className="journey-b">
                 <h3>{s.title}</h3>
                 <p>{s.desc}</p>
               </div>

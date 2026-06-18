@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useLang } from "@/components/lang-provider";
 import { WHATSAPP_URL } from "@/lib/i18n";
 
@@ -10,9 +11,16 @@ export function Footer() {
     <footer className="ft">
       <div className="wrap ft-in">
         <div className="ft-brand">
-          <span className="logo-tx">
-            Akyl<span className="g">Tech</span>
-          </span>
+          <a href="#top" className="ft-logo" aria-label="AkylTech">
+            <Image
+              src="/brand/akyltech-logo-full-cut.png"
+              alt="AkylTech"
+              width={150}
+              height={37}
+              sizes="150px"
+              className="ft-logo-img"
+            />
+          </a>
           <p className="ft-tag">{t.ft_tag}</p>
         </div>
         <nav className="ft-col" aria-label="Разделы">

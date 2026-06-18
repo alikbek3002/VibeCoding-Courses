@@ -462,7 +462,7 @@ export default function WorksSliderDemo() {
             marginBottom: 8,
           }}
         >
-          // наши работы
+          {"// наши работы"}
         </p>
         <h2
           style={{

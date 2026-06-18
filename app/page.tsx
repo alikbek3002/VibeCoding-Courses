@@ -21,10 +21,10 @@ export default function Home() {
         {/* <RobotShowcase /> — временно скрыт */}
         <Marquee />
         <Skills />
-        <Team />
         <Works />
         <Plans />
         <How />
+        <Team />
         <Cta />
       </main>
       <Footer />

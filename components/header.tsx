@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import Image from "next/image";
 import { useLang } from "@/components/lang-provider";
 import { WHATSAPP_URL } from "@/lib/i18n";
 
@@ -21,10 +22,16 @@ export function Header() {
   return (
     <header className="hdr" ref={hdrRef}>
       <div className="wrap hdr-in">
-        <a href="#top" className="logo" aria-label="AkylTech">
-          <span className="logo-sq" />
-          <span className="logo-tx">
-            Akyl<span className="g">Tech</span>
+        <a href="#top" className="logo logo-brand" aria-label="AkylTech">
+          <span className="logo-stage" aria-hidden="true">
+            <Image
+              src="/brand/akyltech-logo-full-cut.png"
+              alt=""
+              fill
+              sizes="150px"
+              className="logo-img logo-img-full"
+              loading="eager"
+            />
           </span>
         </a>
         <nav className="nav" aria-label="Навигация">
