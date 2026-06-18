@@ -66,9 +66,9 @@ export function Skills() {
             </div>
             <p>{t.sk4_d}</p>
             <div className="tile-mock mock-term mono">
-              <span className="tg">› deploy</span>
-              <span className="tw">building…</span>
-              <span className="td">✓ live · vercel.app</span>
+              <span className="tg">› build crm</span>
+              <span className="tw">clients · deals…</span>
+              <span className="td">✓ dashboard ready</span>
             </div>
           </article>
 

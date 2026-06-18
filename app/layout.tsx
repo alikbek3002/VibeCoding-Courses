@@ -70,17 +70,9 @@ const jsonLd = {
         "@type": "Course",
         name: "Полный курс vibe coding",
         description:
-          "Два месяца практики: сайты и лендинги через Lovable и Claude, веб-приложения, Telegram-боты на Python, CRM. Claude Code, Supabase, MCP, 21st.dev. Деплой на Vercel.",
+          "Два месяца практики: сайты и лендинги через Lovable и Claude, веб-приложения, Telegram-боты на Python, CRM. Claude Code, Supabase, MCP, 21st.dev. Деплой на Vercel. Оффлайн в Бишкеке, 3 раза в неделю.",
         provider: { "@type": "Organization", name: "AkylTech" },
-        offers: { "@type": "Offer", price: "60000", priceCurrency: "KGS" },
-      },
-      {
-        "@type": "Course",
-        name: "Первый месяц (база)",
-        description:
-          "Основы вайб-кодинга за месяц: сайты, лендинги и портфолио через Lovable и Claude. Дизайн через промпты, деплой на Vercel.",
-        provider: { "@type": "Organization", name: "AkylTech" },
-        offers: { "@type": "Offer", price: "30000", priceCurrency: "KGS" },
+        offers: { "@type": "Offer", price: "50000", priceCurrency: "KGS" },
       },
     ],
   },

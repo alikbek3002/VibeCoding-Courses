@@ -2,14 +2,13 @@
 
 import { useLang } from "@/components/lang-provider";
 import { WHATSAPP_URL } from "@/lib/i18n";
-import { SplineScene } from "@/components/ui/splite";
 
 export function Hero() {
   const { t } = useLang();
 
   return (
     <section className="hero">
-      <div className="wrap hero-grid">
+      <div className="wrap">
         <div className="hero-l">
           <p className="kick rv">{t.hero_kick}</p>
           <h1
@@ -26,24 +25,19 @@ export function Hero() {
             >
               <span>{t.hero_b1}</span>
             </a>
-            <a
-              className="btn btn-line"
-              href={WHATSAPP_URL}
-              target="_blank"
-              rel="noopener"
-            >
+            <a className="btn btn-line" href="#skills">
               <span>{t.hero_b2}</span>
             </a>
           </div>
+          <div className="hero-facts rv">
+            {t.hero_facts.map((f, i) => (
+              <div className="hero-fact" key={i}>
+                <span className="hero-fact-v">{f.v}</span>
+                <span className="hero-fact-l">{f.l}</span>
+              </div>
+            ))}
+          </div>
           <p className="hero-meta mono rv">{t.hero_meta}</p>
-        </div>
-
-        {/* interactive 3D scene — frameless, robot stands free on the section */}
-        <div className="hero-3d rv" aria-hidden="true">
-          <SplineScene
-            scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
-            className="hero-3d-scene"
-          />
         </div>
       </div>
     </section>

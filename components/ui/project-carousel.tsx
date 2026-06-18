@@ -94,7 +94,7 @@ const ProjectCard = React.memo(function ProjectCard({
       }}
     >
       <div
-        className="relative flex h-[428px] flex-col overflow-hidden rounded-[20px] border bg-white"
+        className="relative flex h-[428px] flex-col overflow-hidden rounded-[2px] border bg-white"
         style={{
           borderColor: "#e6e8e2",
           boxShadow: isActive
@@ -149,7 +149,7 @@ const ProjectCard = React.memo(function ProjectCard({
           <div className="flex items-start gap-3">
             <motion.span
               animate={{ scale: isActive && !reduce ? 1.06 : 1 }}
-              className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl text-white"
+              className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-[2px] text-white"
               style={{
                 background: ACCENT,
                 boxShadow: "0 8px 18px -6px rgba(16,185,129,.6)",
@@ -191,7 +191,7 @@ const ProjectCard = React.memo(function ProjectCard({
                   initial={reduce ? false : { opacity: 0, x: 12 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={reduce ? undefined : { opacity: 0, x: 12 }}
-                  className="pointer-events-none inline-flex items-center gap-2 rounded-full px-4 py-2 text-[13px] font-semibold text-white"
+                  className="pointer-events-none inline-flex items-center gap-2 rounded-[2px] px-4 py-2 text-[13px] font-semibold text-white"
                   style={{ background: INK }}
                 >
                   {openLabel}
@@ -217,7 +217,7 @@ const ProjectCard = React.memo(function ProjectCard({
               }
               if (!isExternal) e.preventDefault();
             }}
-            className="absolute inset-0 z-10 rounded-[20px]"
+            className="absolute inset-0 z-10 rounded-[2px]"
           />
         )}
       </div>
