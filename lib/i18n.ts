@@ -345,4 +345,4 @@ export const I18N = {
 export type Lang = keyof typeof I18N;
 export type Dict = (typeof I18N)[Lang];
 
-export const WHATSAPP_URL = "https://wa.me/996770172008";
+export const WHATSAPP_URL = "https://wa.me/996227221145";

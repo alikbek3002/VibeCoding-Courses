@@ -21,7 +21,7 @@ export function Cta() {
           <span className="wa" aria-hidden="true" />
           <span>{t.cta_b}</span>
         </a>
-        <p className="cta-ph mono">+996 770 172 008</p>
+        <p className="cta-ph mono">+996 227 221 145</p>
       </div>
     </section>
   );

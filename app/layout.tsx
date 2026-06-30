@@ -109,9 +109,12 @@ const jsonLd = {
         addressLocality: "Бишкек",
         addressCountry: "KG",
       },
-      telephone: "+996770172008",
+      telephone: "+996227221145",
       email: "reviewpulse.official@gmail.com",
-      sameAs: ["https://wa.me/996770172008"],
+      sameAs: [
+        "https://wa.me/996227221145",
+        "https://www.instagram.com/akyltech_kg/",
+      ],
       foundingDate: "2025",
     },
     {

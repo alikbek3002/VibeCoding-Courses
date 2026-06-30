@@ -42,7 +42,10 @@ export function Footer() {
             WhatsApp
           </a>
           <a href={WHATSAPP_URL} target="_blank" rel="noopener">
-            +996 770 172 008
+            +996 227 221 145
+          </a>
+          <a href="https://www.instagram.com/akyltech_kg/" target="_blank" rel="noopener">
+            Instagram
           </a>
           <span className="ft-city">{t.ft_city}</span>
         </div>
