@@ -20,8 +20,8 @@ import {
 } from "@/components/ui/project-carousel";
 
 /**
- * Метаданные 10 наших работ. ТЕКСТ (название/описание) правится в lib/i18n.ts → works[].
- * Здесь правятся ссылка, тег-категория, иконка и скриншот — по индексу 0..9.
+ * Метаданные наших работ. ТЕКСТ (название/описание) правится в lib/i18n.ts → works[].
+ * Здесь правятся ссылка, тег-категория, иконка и скриншот — по индексу.
  *
  *  • href — ссылка на живой проект (открывается в новой вкладке).
  *  • img  — скриншот карточки в /public/works/ (1200×784, формат карточки 1.53:1).
@@ -40,6 +40,7 @@ const META: { Icon: LucideIcon; tag: string; href: string; img?: string }[] = [
   { Icon: ShoppingBag,   tag: "Магазин",  href: "https://neuronshop.store/",     img: "/works/neuronshop.jpg" }, // 7 — NeuronShop, интернет-магазин
   { Icon: Rocket,        tag: "Бизнес",   href: "https://apkgz.org/",            img: "/works/apkgz.jpg" },      // 8 — Accelerate Prosperity KG
   { Icon: Heart,         tag: "Telegram", href: "https://t.me/dom_matery_bot",   img: "/works/dom_matery.jpg" }, // 9 — Эне үйү, бот поддержки
+  { Icon: Bot,           tag: "Попутки",  href: "https://t.me/BishkekG0" },                                      // 10 — Айда Бишкек, Telegram-канал попуток
 ];
 
 export function Works() {
