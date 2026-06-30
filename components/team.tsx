@@ -5,10 +5,10 @@ import { useState } from "react";
 import { useLang } from "@/components/lang-provider";
 
 const PHOTOS: Record<string, string> = {
-  "Муканбетов Аликбек": "/team/alikbek-v2.jpg",
-  "Жусупбеков Эрбол": "/team/erbol.jpg",
-  "Бердибаев Чынгыз": "/team/chyngyz-v2.jpg",
-  "Миртемиров Эмирхан": "/team/emirkhan.jpg",
+  "Муканбетов Аликбек": "/team/alikbek-balanced-v2.jpg",
+  "Жусупбеков Эрбол": "/team/erbol-balanced-v2.jpg",
+  "Бердибаев Чынгыз": "/team/chyngyz-balanced-v2.jpg",
+  "Миртемиров Эмирхан": "/team/emirkhan-balanced-v2.jpg",
 };
 
 function TeamCard({
@@ -37,6 +37,7 @@ function TeamCard({
             alt={hidden ? "" : name}
             fill
             sizes={sizes}
+            loading="eager"
             className="team-photo"
           />
         ) : (
