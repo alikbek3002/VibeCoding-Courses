@@ -1,6 +1,15 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import { hanken, montserrat, jetbrains, playfair, bricolage } from "./fonts";
 import { LangProvider } from "@/components/lang-provider";
+
+const fontVars = [
+  hanken.variable,
+  montserrat.variable,
+  jetbrains.variable,
+  playfair.variable,
+  bricolage.variable,
+].join(" ");
 
 const SITE_URL = "https://akyltech.dev";
 const TITLE =
@@ -214,22 +223,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ru">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin=""
-        />
-        {/* Грузим шрифты через <link>, а не next/font, чтобы 1:1 повторить
-            типографику прототипа и фолбэк кириллицы. */}
-        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
-        <link
-          href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Montserrat:wght@500;600;700&family=Playfair+Display:ital,wght@1,500;1,600&display=swap"
-          rel="stylesheet"
-        />
-      </head>
+    <html lang="ru" className={fontVars}>
       <body>
         <LangProvider>{children}</LangProvider>
         <script

@@ -127,7 +127,7 @@ const ProjectCard = React.memo(function ProjectCard({
               </span>
               <span
                 className="absolute left-3 top-3 rounded-full bg-white/15 px-2.5 py-1 text-[10px] font-medium uppercase tracking-wide text-white backdrop-blur-sm"
-                style={{ fontFamily: '"JetBrains Mono", monospace' }}
+                style={{ fontFamily: "var(--font-mono), monospace" }}
               >
                 превью
               </span>
@@ -178,7 +178,7 @@ const ProjectCard = React.memo(function ProjectCard({
               style={{
                 background: "#e6f6ef",
                 color: ACCENT_D,
-                fontFamily: '"JetBrains Mono", monospace',
+                fontFamily: "var(--font-mono), monospace",
               }}
             >
               {project.tag}
@@ -366,7 +366,7 @@ export function ProjectCarousel({
         </div>
         <span
           className="text-[12px]"
-          style={{ color: "#828d86", fontFamily: '"JetBrains Mono", monospace' }}
+          style={{ color: "#828d86", fontFamily: "var(--font-mono), monospace" }}
         >
           {String(index + 1).padStart(2, "0")} / {String(n).padStart(2, "0")}
         </span>
