@@ -218,11 +218,22 @@ h1,h2,h3,h4{font-family:var(--font-display);font-weight:700;line-height:1.1;lett
 
 /* ============ TEAM ============ */
 .team-head{max-width:760px}
-.team-marquee{position:relative;overflow:hidden;padding:10px 0 14px;-webkit-mask:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
-.team-track{display:flex;width:max-content;animation:teamScroll 32s linear infinite}
-.team-track:hover{animation-play-state:paused}
-.team-track .team-card{flex:0 0 250px;margin-right:18px}
-@keyframes teamScroll{to{transform:translateX(-50%)}}
+.team-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;max-width:980px;margin:0 auto}
+/* Мобильный степпер: один участник, переключение кнопками (десктоп — карусель выше) */
+.team-stepper{display:none}
+.team-stage{position:relative;display:grid;max-width:360px;margin:0 auto}
+.team-stage .team-card{grid-area:1/1;width:100%;opacity:0;visibility:hidden;transform:translateY(10px);transition:opacity .35s var(--ez),transform .35s var(--ez),visibility .35s}
+.team-stage .team-card.is-on{opacity:1;visibility:visible;transform:none}
+.team-controls{display:flex;align-items:center;justify-content:center;gap:18px;margin-top:22px}
+.team-arrow{width:46px;height:46px;flex:0 0 auto;border-radius:50%;border:1px solid var(--line-2);background:#fff;color:var(--ink);font-size:22px;line-height:0;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:border-color .2s var(--ez),transform .15s var(--ez)}
+.team-arrow:hover{border-color:var(--ink)}
+.team-arrow:active{transform:scale(.93)}
+.team-arrow:focus-visible{outline:none;box-shadow:0 0 0 2px #fff,0 0 0 4px var(--acc-d)}
+.team-dots{display:flex;align-items:center;gap:8px}
+.team-dot{width:8px;height:8px;padding:0;border:none;border-radius:99px;background:var(--line-2);cursor:pointer;transition:width .25s var(--ez),background .25s var(--ez)}
+.team-dot.on{width:24px;background:var(--acc)}
+.team-dot:focus-visible{outline:none;box-shadow:0 0 0 2px #fff,0 0 0 3px var(--acc-d)}
+.team-count{text-align:center;margin-top:12px;font-size:12px;color:var(--ink-3)}
 .team-card{background:#fff;border:1px solid var(--line);border-radius:2px;padding-bottom:22px;overflow:hidden;display:flex;flex-direction:column;transition:transform .3s var(--ez),box-shadow .3s var(--ez),border-color .3s}
 .team-card:hover{transform:translateY(-5px);box-shadow:var(--shadow);border-color:var(--line-2)}
 .team-ava{position:relative;height:240px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--acc),var(--acc-d) 70%,#06231a)}
@@ -468,6 +479,7 @@ h1,h2,h3,h4{font-family:var(--font-display);font-weight:700;line-height:1.1;lett
 
 /* ============ RESPONSIVE ============ */
 @media(max-width:980px){
+  .team-grid{grid-template-columns:repeat(2,1fr);max-width:560px}
   .hero-grid{grid-template-columns:1fr;gap:42px}
   .hero-3d{order:2;height:clamp(420px,84vw,560px);align-self:auto;margin-bottom:0}
   .robot-grid{grid-template-columns:1fr}
@@ -495,6 +507,9 @@ h1,h2,h3,h4{font-family:var(--font-display);font-weight:700;line-height:1.1;lett
   .tile-wide{grid-column:span 2}
 }
 @media(max-width:760px){
+  /* команда: на мобилке — степпер вместо сетки */
+  .team-grid{display:none}
+  .team-stepper{display:block}
   .works{grid-template-columns:1fr;max-width:440px;margin:0 auto}
   .plans{grid-template-columns:1fr}
   .bento{grid-template-columns:1fr}
@@ -569,8 +584,6 @@ h1,h2,h3,h4{font-family:var(--font-display);font-weight:700;line-height:1.1;lett
 @media(prefers-reduced-motion:reduce){
   .rv{opacity:1;transform:none;transition:none}
   .marq-track{animation:none}
-  .team-track{animation:none}
-  .team-marquee{overflow-x:auto;-webkit-mask:none;mask:none}
   .logo-img-full{opacity:1;transform:none}
   .skills-scene{opacity:.7}
   *{animation-duration:.001s!important}

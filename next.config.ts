@@ -1,6 +1,20 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Канонический хост — апекс akyltech.dev (без www). www отдаёт 200 как дубль,
+  // поэтому насильно редиректим www → апекс (308), чтобы Google не индексировал
+  // две копии и показывал имя «AkylTech», а не голый домен. Дублирует/страхует
+  // доменный редирект в Vercel.
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "www.akyltech.dev" }],
+        destination: "https://akyltech.dev/:path*",
+        permanent: true,
+      },
+    ];
+  },
   // Пустой turbopack-конфиг обязателен: в Next 16 `next build` (и Vercel) идут
   // через Turbopack по умолчанию, и наличие webpack() ниже БЕЗ этого блока
   // валит сборку с "webpack config and no turbopack config". Так Next понимает,
