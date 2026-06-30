@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "AkylTech — школа vibe coding в Бишкеке",
+    name: "AkylTech — курсы вайб-кодинга и ИИ в Бишкеке",
     short_name: "AkylTech",
     description:
       "Создавай сайты и Telegram-боты с помощью ИИ — без кода. Оффлайн в Бишкеке.",

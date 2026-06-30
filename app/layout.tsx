@@ -13,9 +13,9 @@ const fontVars = [
 
 const SITE_URL = "https://akyltech.dev";
 const TITLE =
-  "AkylTech — школа vibe coding в Бишкеке: сайты и Telegram-боты с ИИ без кода";
+  "AkylTech — курсы вайб-кодинга и ИИ в Бишкеке: сайты и Telegram-боты без кода";
 const DESCRIPTION =
-  "Оффлайн-школа AkylTech в Бишкеке. Научись создавать сайты, лендинги и Telegram-боты с помощью искусственного интеллекта — без программирования. Курсы для всех от 13 до 40 лет. Запись через WhatsApp.";
+  "Оффлайн-курсы вайб-кодинга и ИИ в Бишкеке от AkylTech. Научись создавать сайты, лендинги и Telegram-боты с помощью искусственного интеллекта — без программирования. Для всех от 13 до 40 лет. Запись через WhatsApp.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     "курсы программирования Бишкек",
     "разработка Telegram бот",
     "Telegram бот на Python",
-    "школа программирования Бишкек",
+    "курсы вайб-кодинга Бишкек",
     "no-code Бишкек",
     "ИИ курсы Кыргызстан",
     "Lovable",
@@ -65,14 +65,14 @@ export const metadata: Metadata = {
     locale: "ru_RU",
     alternateLocale: "ky_KG",
     siteName: "AkylTech",
-    title: "AkylTech — школа vibe coding в Бишкеке",
+    title: "AkylTech — курсы вайб-кодинга и ИИ в Бишкеке",
     description:
       "Создавай сайты и Telegram-боты с помощью ИИ, без кода. Оффлайн в Бишкеке, с нуля до проекта в портфолио.",
     url: SITE_URL + "/",
   },
   twitter: {
     card: "summary_large_image",
-    title: "AkylTech — школа vibe coding в Бишкеке",
+    title: "AkylTech — курсы вайб-кодинга и ИИ в Бишкеке",
     description: "Сайты и Telegram-боты с помощью ИИ. Без кода. Оффлайн, Бишкек.",
   },
   appleWebApp: {
@@ -99,7 +99,7 @@ const jsonLd = {
       name: "AkylTech",
       alternateName: "АкылТех",
       description:
-        "Оффлайн-школа vibe coding в Бишкеке: создание сайтов, Telegram-ботов и CRM с помощью ИИ без программирования.",
+        "Оффлайн-курсы вайб-кодинга и ИИ в Бишкеке: создание сайтов, Telegram-ботов и CRM с помощью ИИ без программирования.",
       url: SITE_URL + "/",
       logo: SITE_URL + "/brand/icon-512.png",
       image: SITE_URL + "/opengraph-image.png",
