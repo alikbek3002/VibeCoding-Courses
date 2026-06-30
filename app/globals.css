@@ -254,6 +254,9 @@ h1,h2,h3,h4{font-family:var(--font-display);font-weight:700;line-height:1.1;lett
 .skills-core-k{position:absolute;top:58px;z-index:3;color:#159963;font-size:12px;font-weight:800;letter-spacing:.32em}
 .skills-core-scene{position:absolute;inset:-22px;z-index:2}
 .skills-scene{position:absolute;inset:0;width:100%;height:100%;opacity:.96;filter:drop-shadow(0 34px 58px rgba(21,151,96,.28))}
+/* катушка плавает за счёт transform (composited) — без JS и rAF */
+.skills-coil{transform-box:fill-box;transform-origin:center;animation:skillsCoil 7s var(--ez) infinite}
+@keyframes skillsCoil{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
 .skill-slabs{position:relative;z-index:3;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px 300px;align-items:center}
 .skill-slab{position:relative;min-height:136px;display:grid;grid-template-columns:74px minmax(0,1fr) 52px;gap:18px;align-items:center;padding:18px 22px;overflow:hidden;background:linear-gradient(135deg,rgba(255,255,255,.9),rgba(247,255,251,.78));border:1px solid rgba(24,63,43,.1);border-radius:8px;box-shadow:0 28px 80px rgba(28,61,43,.1),inset 0 1px 0 rgba(255,255,255,.96);backdrop-filter:blur(20px);transition:transform .32s var(--ez),box-shadow .32s var(--ez),border-color .32s var(--ez)}
 .skill-slab:nth-child(odd){justify-self:end}
@@ -353,7 +356,8 @@ h1,h2,h3,h4{font-family:var(--font-display);font-weight:700;line-height:1.1;lett
 @media(max-width:760px){.plans-glass{flex-direction:column;max-width:440px}}
 
 /* ============ JOURNEY ============ */
-.how-sec{position:relative;isolation:isolate;overflow:hidden;background:#fbfcf9 url("/how/journey-bg.png") center 47%/cover no-repeat;border-top:1px solid rgba(17,61,41,.07);border-bottom:1px solid rgba(17,61,41,.07);padding:106px 0 126px}
+/* bg optimized to webp */
+.how-sec{position:relative;isolation:isolate;overflow:hidden;background:#fbfcf9 url("/how/journey-bg.webp") center 47%/cover no-repeat;border-top:1px solid rgba(17,61,41,.07);border-bottom:1px solid rgba(17,61,41,.07);padding:106px 0 126px}
 .how-sec::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(255,255,255,.92) 0%,rgba(255,255,255,.72) 33%,rgba(255,255,255,.18) 58%,rgba(255,255,255,.55) 100%),linear-gradient(180deg,rgba(255,255,255,.92) 0%,rgba(255,255,255,.14) 42%,rgba(255,255,255,.82) 100%)}
 .how-sec::after{content:"";position:absolute;inset:0;z-index:-2;background:rgba(255,255,255,.08)}
 .how-wrap{position:relative;display:block}
