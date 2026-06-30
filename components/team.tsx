@@ -21,29 +21,38 @@ export function Team() {
           <h2 className="sec-h">{t.team_h}</h2>
         </header>
 
-        <div className="team-grid rv">
-          {t.team.map((m, i) => {
-            const photo = PHOTOS[m.name];
-            return (
-              <article className="team-card" key={i}>
-                <div className="team-ava">
-                  {photo ? (
-                    <Image
-                      src={photo}
-                      alt={m.name}
-                      fill
-                      sizes="(max-width: 600px) 78vw, 250px"
-                      className="team-photo"
-                    />
-                  ) : (
-                    <span aria-hidden="true">{m.name.charAt(0)}</span>
-                  )}
-                </div>
-                <h3 className="team-name">{m.name}</h3>
-                <p className="team-role mono">{m.role}</p>
-              </article>
-            );
-          })}
+        {/* Бесконечная авто-карусель: карточки продублированы, трек едет по кругу
+            (translateX -50%), на наведение встаёт на паузу. */}
+        <div className="team-marquee rv">
+          <div className="team-track">
+            {[...t.team, ...t.team].map((m, i) => {
+              const photo = PHOTOS[m.name];
+              const dup = i >= t.team.length;
+              return (
+                <article
+                  className="team-card"
+                  key={i}
+                  aria-hidden={dup || undefined}
+                >
+                  <div className="team-ava">
+                    {photo ? (
+                      <Image
+                        src={photo}
+                        alt={dup ? "" : m.name}
+                        fill
+                        sizes="250px"
+                        className="team-photo"
+                      />
+                    ) : (
+                      <span aria-hidden="true">{m.name.charAt(0)}</span>
+                    )}
+                  </div>
+                  <h3 className="team-name">{m.name}</h3>
+                  <p className="team-role mono">{m.role}</p>
+                </article>
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>

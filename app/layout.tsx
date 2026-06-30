@@ -146,8 +146,8 @@ const jsonLd = {
       inLanguage: "ru",
       offers: {
         "@type": "Offer",
-        price: "50000",
-        priceCurrency: "KGS",
+        price: "500",
+        priceCurrency: "USD",
         category: "Paid",
         availability: "https://schema.org/InStock",
         url: SITE_URL + "/#plans",
@@ -184,7 +184,7 @@ const jsonLd = {
           name: "Сколько стоит обучение?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Тариф «Стандарт» (1 месяц) — 30 000 сом, тариф «Про» (весь курс, 2 месяца) — 50 000 сом.",
+            text: "Тариф «Стандарт» (1 месяц) — $300, тариф «Про» (весь курс, 2 месяца) — $500.",
           },
         },
         {
