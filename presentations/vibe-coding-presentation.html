@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vibe Coding — пробный урок</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Unbounded:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  /* ===========================================
+     THEME
+     =========================================== */
+  :root{
+    --stage-bg:#07140f;
+    --slide-bg:#fbfff8;
+    --ink:#0b1d15;
+    --text:#26382f;
+    --muted:#63766b;
+    --paper:#ffffff;
+    --line:#dce9df;
+    --green:#16a34a;
+    --green-dark:#14532d;
+    --lime:#c9ff58;
+    --blue:#2563eb;
+    --orange:#ff7a1a;
+    --red:#ef4444;
+    --shadow:0 22px 70px rgba(13,42,26,.12);
+    --font-display:'Unbounded',sans-serif;
+    --font-body:'Manrope',sans-serif;
+    --ease:cubic-bezier(.16,1,.3,1);
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box}
+
+  /* ===========================================
+     FIXED 16:9 STAGE
+     Slides are authored at 1920x1080 and scaled as one canvas.
+     =========================================== */
+  html,
+  body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    background: var(--stage-bg, #000);
+  }
+
+  .deck-viewport {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    background: var(--stage-bg, #000);
+  }
+
+  .deck-stage {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    transform-origin: 0 0;
+    background: var(--slide-bg, #fff);
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    display: block;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    background: var(--slide-bg, #fff);
+  }
+
+  .slide.active,
+  .slide.visible {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 1;
+  }
+
+  img,
+  video,
+  canvas,
+  svg {
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  .deck-controls {
+    position: fixed;
+    left: 50%;
+    bottom: 22px;
+    transform: translateX(-50%);
+    z-index: 1000;
+  }
+
+  @media print {
+    @page{size:1920px 1080px;margin:0}
+
+    html,
+    body {
+      width: 1920px;
+      height: auto;
+      overflow: visible;
+      background: #fff;
+    }
+
+    .deck-viewport {
+      position: static;
+      overflow: visible;
+      background: #fff;
+    }
+
+    .deck-stage {
+      position: static;
+      width: auto;
+      height: auto;
+      transform: none !important;
+      background: none;
+    }
+
+    .slide {
+      position: relative;
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      pointer-events: auto !important;
+      width: 1920px;
+      height: 1080px;
+      break-after: page;
+      page-break-after: always;
+    }
+
+    .slide:last-child {
+      break-after: auto;
+      page-break-after: auto;
+    }
+
+    .deck-controls,
+    .counter,
+    .dots,
+    .progress {
+      display: none !important;
+    }
+
+    .reveal{
+      opacity:1 !important;
+      transform:none !important;
+      transition:none !important;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.2s !important;
+    }
+  }
+
+  /* ===========================================
+     BASE LAYOUT
+     =========================================== */
+  body{
+    font-family:var(--font-body);
+    color:var(--text);
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .slide{
+    padding:92px 110px;
+    color:var(--text);
+  }
+
+  .slide::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    background:
+      linear-gradient(90deg,rgba(20,83,45,.045) 1px,transparent 1px),
+      linear-gradient(rgba(20,83,45,.035) 1px,transparent 1px);
+    background-size:80px 80px;
+    mask-image:linear-gradient(90deg,rgba(0,0,0,.82),transparent 74%);
+  }
+
+  .slide.accent{
+    background:linear-gradient(135deg,#f8fff2 0%,#ffffff 58%,#eef9ff 100%);
+  }
+
+  .slide.dark{
+    --slide-bg:#07140f;
+    background:#07140f;
+    color:#eefaf1;
+  }
+
+  .slide.dark::before{
+    background:
+      linear-gradient(90deg,rgba(201,255,88,.10) 1px,transparent 1px),
+      linear-gradient(rgba(201,255,88,.08) 1px,transparent 1px);
+    background-size:82px 82px;
+    mask-image:linear-gradient(90deg,rgba(0,0,0,.56),transparent 76%);
+  }
+
+  .content{
+    position:relative;
+    z-index:2;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+  }
+
+  .center{justify-content:center}
+  .between{justify-content:space-between}
+  .split{
+    display:grid;
+    grid-template-columns:1.05fr .95fr;
+    gap:70px;
+    align-items:center;
+    height:100%;
+  }
+
+  .split.left-heavy{grid-template-columns:1.18fr .82fr}
+  .grid{display:grid;gap:26px}
+  .g2{grid-template-columns:repeat(2,1fr)}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g4{grid-template-columns:repeat(4,1fr)}
+
+  /* ===========================================
+     TYPOGRAPHY
+     =========================================== */
+  .topline{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    font-size:22px;
+    line-height:1;
+    font-weight:800;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--green);
+    margin-bottom:34px;
+  }
+
+  .topline::before{
+    content:"";
+    width:58px;
+    height:6px;
+    background:var(--green);
+  }
+
+  .dark .topline{color:var(--lime)}
+  .dark .topline::before{background:var(--lime)}
+
+  h1,h2,h3{
+    color:var(--ink);
+    font-weight:800;
+    letter-spacing:0;
+  }
+
+  .dark h1,.dark h2,.dark h3{color:#f4fff6}
+
+  h1{
+    font-family:var(--font-display);
+    font-size:122px;
+    line-height:.95;
+    max-width:1280px;
+  }
+
+  h2{
+    font-family:var(--font-display);
+    font-size:76px;
+    line-height:1.03;
+    max-width:1320px;
+  }
+
+  h3{
+    font-size:34px;
+    line-height:1.16;
+  }
+
+  .lead{
+    font-size:36px;
+    line-height:1.28;
+    max-width:1060px;
+    color:var(--text);
+    margin-top:30px;
+    font-weight:650;
+  }
+
+  .dark .lead{color:#cfe6d6}
+  .mark{color:var(--green)}
+  .dark .mark{color:var(--lime)}
+  .muted{color:var(--muted)}
+
+  p,li{
+    font-size:28px;
+    line-height:1.38;
+  }
+
+  ul{list-style:none}
+  .clean li{
+    position:relative;
+    padding-left:36px;
+    margin:16px 0;
+  }
+
+  .clean li::before{
+    content:"";
+    position:absolute;
+    left:0;
+    top:.52em;
+    width:15px;
+    height:15px;
+    background:var(--green);
+  }
+
+  .dark .clean li::before{background:var(--lime)}
+
+  .big-statement{
+    font-family:var(--font-display);
+    font-size:104px;
+    line-height:1.02;
+    max-width:1480px;
+    color:var(--ink);
+  }
+
+  .dark .big-statement{color:#f4fff6}
+
+  /* ===========================================
+     COMPONENTS
+     =========================================== */
+  .card,
+  .panel,
+  .step,
+  .case,
+  .term,
+  .week,
+  .prompt-box,
+  .practice-card{
+    border-radius:8px;
+  }
+
+  .card,
+  .panel,
+  .step,
+  .case,
+  .term,
+  .week,
+  .practice-card{
+    background:var(--paper);
+    border:1px solid var(--line);
+    box-shadow:var(--shadow);
+  }
+
+  .card{padding:34px;min-height:245px}
+  .card h3{margin-bottom:14px}
+  .card p{color:var(--muted)}
+
+  .dark .card,
+  .dark .panel,
+  .dark .step,
+  .dark .case,
+  .dark .term,
+  .dark .week,
+  .dark .practice-card{
+    background:rgba(255,255,255,.055);
+    border-color:rgba(201,255,88,.18);
+    box-shadow:none;
+  }
+
+  .dark .card p,
+  .dark .case p,
+  .dark .term p,
+  .dark .week p{color:#b9cdbc}
+
+  .pill-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+    margin-top:34px;
+  }
+
+  .pill{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    border:1px solid rgba(20,83,45,.18);
+    background:#fff;
+    border-radius:999px;
+    padding:13px 20px;
+    color:var(--ink);
+    font-size:22px;
+    font-weight:800;
+  }
+
+  .pill::before{
+    content:"";
+    width:10px;
+    height:10px;
+    background:var(--green);
+    border-radius:50%;
+  }
+
+  .dark .pill{
+    background:rgba(255,255,255,.07);
+    color:#f4fff6;
+    border-color:rgba(201,255,88,.25);
+  }
+
+  .dark .pill::before{background:var(--lime)}
+
+  .callout{
+    border-left:9px solid var(--green);
+    padding:28px 34px;
+    background:#fff;
+    border-radius:8px;
+    box-shadow:var(--shadow);
+    color:var(--green-dark);
+    font-size:31px;
+    line-height:1.34;
+    font-weight:800;
+  }
+
+  .dark .callout{
+    background:rgba(201,255,88,.08);
+    color:#efffca;
+    border-left-color:var(--lime);
+    box-shadow:none;
+  }
+
+  .tag{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:56px;
+    height:56px;
+    background:var(--green);
+    color:#fff;
+    font-family:var(--font-display);
+    font-size:22px;
+    border-radius:8px;
+    flex:none;
+  }
+
+  .dark .tag{background:var(--lime);color:#07140f}
+
+  .num{
+    font-family:var(--font-display);
+    font-size:108px;
+    line-height:.82;
+    color:var(--green);
+    margin-bottom:28px;
+  }
+
+  .num.blue{color:var(--blue)}
+  .num.orange{color:var(--orange)}
+
+  /* ===========================================
+     BRAND
+     =========================================== */
+  .logo{
+    display:block;
+    width:260px;
+    height:auto;
+  }
+
+  .hero-logo{
+    width:280px;
+    margin-bottom:48px;
+  }
+
+  .chrome{
+    position:fixed;
+    z-index:20;
+    pointer-events:none;
+  }
+
+  .brand{
+    left:28px;
+    top:24px;
+    display:flex;
+    align-items:center;
+    background:rgba(6,19,13,.72);
+    border:1px solid rgba(255,255,255,.14);
+    border-radius:999px;
+    padding:10px 14px;
+    backdrop-filter:blur(8px);
+  }
+
+  .brand-logo{
+    width:128px;
+    height:auto;
+    display:block;
+  }
+
+  .footer-logo{
+    position:absolute;
+    right:104px;
+    bottom:78px;
+    width:260px;
+    z-index:4;
+  }
+
+  /* ===========================================
+     SPECIAL LAYOUTS
+     =========================================== */
+  .hero-layout{
+    display:grid;
+    grid-template-columns:1.06fr .94fr;
+    gap:74px;
+    align-items:center;
+    height:100%;
+  }
+
+  .hero-title .line{display:block}
+
+  .hero-card{
+    position:relative;
+    height:735px;
+    background:#07140f;
+    color:#fff;
+    border-radius:8px;
+    overflow:hidden;
+    padding:56px;
+    box-shadow:0 30px 86px rgba(6,19,13,.28);
+  }
+
+  .hero-card::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:
+      linear-gradient(120deg,transparent 0 42%,rgba(201,255,88,.16) 42% 56%,transparent 56%),
+      linear-gradient(90deg,rgba(255,255,255,.07) 1px,transparent 1px);
+    background-size:auto,48px 48px;
+  }
+
+  .hero-card > *{position:relative;z-index:1}
+  .hero-card .label{
+    font-size:23px;
+    color:#a8c2ae;
+    font-weight:800;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+  }
+
+  .hero-card h3{
+    color:var(--lime);
+    font-family:var(--font-display);
+    font-size:72px;
+    line-height:1.04;
+    margin:42px 0 28px;
+  }
+
+  .hero-card p{
+    color:#d5e8d9;
+    max-width:560px;
+  }
+
+  .before-after{
+    display:grid;
+    grid-template-columns:1fr 110px 1fr;
+    gap:28px;
+    align-items:stretch;
+    margin-top:54px;
+  }
+
+  .panel{padding:40px}
+  .panel h3{margin-bottom:22px}
+  .panel.old{background:#f7faf7}
+  .panel.new{border-color:rgba(22,163,74,.35);background:linear-gradient(135deg,#ffffff,#efffed)}
+
+  .arrow-big{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:var(--green);
+    font-family:var(--font-display);
+    font-size:58px;
+  }
+
+  .case{
+    padding:36px;
+    min-height:230px;
+    position:relative;
+    overflow:hidden;
+  }
+
+  .case::after{
+    content:"";
+    position:absolute;
+    right:0;
+    top:0;
+    width:12px;
+    height:100%;
+    background:var(--green);
+  }
+
+  .case:nth-child(2)::after{background:var(--blue)}
+  .case:nth-child(3)::after{background:var(--orange)}
+  .case:nth-child(4)::after{background:var(--lime)}
+  .case h3{font-size:34px;margin-bottom:14px}
+  .case p{color:var(--muted)}
+
+  .step{
+    padding:34px;
+    min-height:275px;
+  }
+
+  .step h3{margin:24px 0 12px}
+  .step p{color:var(--muted)}
+
+  .prompt-box{
+    background:#07140f;
+    color:#eaffef;
+    padding:36px;
+    box-shadow:0 24px 70px rgba(7,20,15,.25);
+    border:1px solid rgba(201,255,88,.16);
+  }
+
+  .prompt-box .label{
+    color:var(--lime);
+    text-transform:uppercase;
+    letter-spacing:.13em;
+    font-size:18px;
+    font-weight:800;
+    margin-bottom:22px;
+  }
+
+  .prompt-box p{
+    font-size:30px;
+    line-height:1.42;
+    color:#f2fff5;
+  }
+
+  .mini-browser{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:8px;
+    box-shadow:var(--shadow);
+    overflow:hidden;
+  }
+
+  .browser-bar{
+    height:54px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:0 18px;
+    background:#edf4ef;
+    border-bottom:1px solid var(--line);
+  }
+
+  .browser-bar i{
+    width:14px;
+    height:14px;
+    display:block;
+    border-radius:50%;
+    background:#94a39a;
+  }
+
+  .browser-body{padding:34px}
+  .mock-hero{
+    height:250px;
+    border-radius:8px;
+    background:
+      linear-gradient(135deg,rgba(20,83,45,.92),rgba(22,163,74,.78)),
+      linear-gradient(90deg,rgba(255,255,255,.15) 1px,transparent 1px);
+    background-size:auto,34px 34px;
+    padding:30px;
+    color:#fff;
+  }
+
+  .mock-hero h4{
+    font-size:44px;
+    line-height:1.05;
+    margin-bottom:18px;
+  }
+
+  .mock-line{
+    height:18px;
+    background:#d7e8dc;
+    border-radius:999px;
+    margin:15px 0;
+  }
+
+  .mock-line.short{width:52%}
+  .mock-line.mid{width:74%}
+  .mock-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;
+    margin-top:24px;
+  }
+
+  .mock-tile{
+    height:112px;
+    border-radius:8px;
+    background:#edf6ee;
+    border:1px solid var(--line);
+  }
+
+  .check-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+  }
+
+  .check{
+    display:flex;
+    gap:16px;
+    align-items:flex-start;
+    padding:24px;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:8px;
+  }
+
+  .check span{
+    width:28px;
+    height:28px;
+    background:var(--green);
+    flex:none;
+    margin-top:6px;
+  }
+
+  .check p{font-size:25px}
+
+  .edit-list{
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+  }
+
+  .edit-chip{
+    background:#fff;
+    border:1px solid var(--line);
+    border-left:8px solid var(--green);
+    border-radius:8px;
+    padding:25px 28px;
+    font-size:29px;
+    font-weight:800;
+    color:var(--ink);
+  }
+
+  .edit-chip:nth-child(2){border-left-color:var(--blue)}
+  .edit-chip:nth-child(3){border-left-color:var(--orange)}
+
+  .practice-board{
+    display:grid;
+    grid-template-columns:420px 1fr;
+    gap:34px;
+    margin-top:44px;
+  }
+
+  .practice-card{
+    background:#07140f;
+    color:#fff;
+    padding:38px;
+    min-height:392px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+  }
+
+  .practice-card .big{
+    font-family:var(--font-display);
+    color:var(--lime);
+    font-size:92px;
+    line-height:1;
+  }
+
+  .practice-card p{color:#d5e8d9}
+
+  .role-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:28px;
+    margin-top:44px;
+  }
+
+  .role{
+    border-radius:8px;
+    padding:40px;
+    border:1px solid var(--line);
+    background:#fff;
+  }
+
+  .role.ai{background:#07140f;color:#fff;border-color:#07140f}
+  .role.ai h3{color:#fff}
+  .role.ai li{color:#d5e8d9}
+  .role.ai li::before{background:var(--lime)}
+
+  .term-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:24px;
+    margin-top:46px;
+  }
+
+  .term{
+    padding:34px;
+    min-height:250px;
+  }
+
+  .term h3{font-size:34px;margin-bottom:18px;color:var(--green-dark)}
+  .dark .term h3{color:#f4fff6}
+  .term p{color:var(--muted)}
+
+  .weeks{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:22px;
+    margin-top:48px;
+  }
+
+  .week{
+    padding:30px;
+    min-height:330px;
+    border-top:10px solid var(--green);
+  }
+
+  .week:nth-child(2){border-top-color:var(--blue)}
+  .week:nth-child(3){border-top-color:var(--orange)}
+  .week:nth-child(4){border-top-color:var(--lime)}
+
+  .week .wk{
+    font-family:var(--font-display);
+    color:var(--green);
+    font-size:30px;
+    margin-bottom:22px;
+  }
+
+  .week h3{font-size:30px;margin-bottom:18px}
+  .week p{font-size:24px;color:var(--muted)}
+
+  /* ===========================================
+     PRESENTATION CHROME AND ANIMATION
+     =========================================== */
+  .counter{
+    right:28px;
+    bottom:24px;
+    color:#fff;
+    font-family:var(--font-body);
+    font-weight:800;
+    font-size:15px;
+    letter-spacing:.1em;
+    background:rgba(6,19,13,.72);
+    border:1px solid rgba(255,255,255,.14);
+    padding:10px 14px;
+    border-radius:999px;
+    backdrop-filter:blur(8px);
+  }
+
+  .progress{
+    position:fixed;
+    left:0;
+    top:0;
+    width:100%;
+    height:5px;
+    background:rgba(255,255,255,.08);
+    z-index:30;
+  }
+
+  .progress span{
+    display:block;
+    height:100%;
+    width:0;
+    background:linear-gradient(90deg,var(--green),var(--lime),var(--orange));
+    transition:width .35s var(--ease);
+  }
+
+  .dots{
+    position:fixed;
+    right:18px;
+    top:50%;
+    transform:translateY(-50%);
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    padding:10px 6px;
+    border-radius:999px;
+    background:rgba(6,19,13,.18);
+    backdrop-filter:blur(8px);
+    z-index:25;
+  }
+
+  .dots button{
+    width:8px;
+    height:8px;
+    border:0;
+    background:rgba(255,255,255,.30);
+    border-radius:999px;
+    cursor:pointer;
+    transition:height .25s var(--ease),background .25s var(--ease);
+  }
+
+  .dots button.active{
+    height:28px;
+    background:var(--lime);
+  }
+
+  .reveal{
+    opacity:0;
+    transform:translateY(34px);
+    transition:opacity .65s var(--ease),transform .65s var(--ease);
+    transition-delay:calc(var(--d,0) * 80ms);
+  }
+
+  .slide.visible .reveal{
+    opacity:1;
+    transform:translateY(0);
+  }
+</style>
+</head>
+<body>
+<div class="progress"><span id="progressBar"></span></div>
+<div class="chrome brand"><img class="brand-logo" src="public/brand/akyltech-logo-white.svg" alt="AkylTech"></div>
+<div class="chrome counter" id="counter">01 / 18</div>
+<nav class="dots" id="dots" aria-label="Навигация по слайдам"></nav>
+
+<div class="deck-viewport">
+  <main class="deck-stage" id="deckStage">
+
+    <!-- ===========================================
+         SLIDE 1: OPENING
+         =========================================== -->
+    <section class="slide active visible accent">
+      <div class="content">
+        <div class="hero-layout">
+          <div>
+            <img class="logo hero-logo reveal" src="public/brand/akyltech-logo.svg" alt="AkylTech">
+            <div class="topline reveal">Пробный урок</div>
+            <h1 class="hero-title reveal" style="--d:1"><span class="line">Vibe Coding</span><span class="line mark">простыми словами</span></h1>
+            <p class="lead reveal" style="--d:2">Разберем, как идея превращается в сайт с помощью ИИ, и попробуем сделать первый черновик на практике.</p>
+            <div class="pill-row reveal" style="--d:3">
+              <span class="pill">понятно</span>
+              <span class="pill">на примере</span>
+              <span class="pill">с практикой</span>
+            </div>
+          </div>
+          <div class="hero-card reveal" style="--d:2">
+            <div class="label">Главная мысль</div>
+            <h3>Сайт начинается не с кода, а с задачи.</h3>
+            <p>Сегодня важнее уметь объяснить результат: кому сайт нужен, что он должен сказать и какое действие должен привести.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===========================================
+         SLIDE 2: SHIFT
+         =========================================== -->
+    <section class="slide">
+      <div class="content center">
+        <div class="topline reveal">Что изменилось</div>
+        <h2 class="reveal" style="--d:1">Раньше вход был через синтаксис. Теперь вход через смысл.</h2>
+        <div class="before-after">
+          <div class="panel old reveal" style="--d:2">
+            <h3>Раньше</h3>
+            <ul class="clean">
+              <li>учить язык</li>
+              <li>писать код руками</li>
+              <li>долго ждать первый результат</li>
+            </ul>
+          </div>
+          <div class="arrow-big reveal" style="--d:3">-></div>
+          <div class="panel new reveal" style="--d:4">
+            <h3>Сейчас</h3>
+            <ul class="clean">
+              <li>описать задачу</li>
+              <li>получить черновик</li>
+              <li>улучшать его правками</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===========================================
+         SLIDE 3: DEFINITION
+         =========================================== -->
+    <section class="slide dark">
+      <div class="content center">
+        <div class="topline reveal">Что такое вайбкодинг</div>
+        <div class="big-statement reveal" style="--d:1">Вайбкодинг — это способ создавать цифровые продукты через задачи для ИИ.</div>
+        <p class="lead reveal" style="--d:2">Человек задает направление, проверяет качество и принимает решения. ИИ помогает быстрее собрать первый рабочий вариант.</p>
+      </div>
+    </section>
+
+    <!-- ===========================================
+         SLIDE 4: CORE SKILL
+         =========================================== -->
+    <section class="slide accent">
+      <div class="content center">
+        <div class="topline reveal">Главный навык</div>
+        <h2 class="reveal" style="--d:1">Не “знать все команды”. А ясно объяснять, что должно получиться.</h2>
+        <div class="grid g3" style="margin-top:54px">
+          <div class="card reveal" style="--d:2"><div class="num">1</div><h3>Цель</h3><p>зачем нужен сайт</p></div>
+          <div class="card reveal" style="--d:3"><div class="num blue">2</div><h3>Контекст</h3><p>для кого он создается</p></div>
+          <div class="card reveal" style="--d:4"><div class="num orange">3</div><h3>Критерии</h3><p>как понять, что получилось хорошо</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===========================================
+         SLIDE 5: RELEVANCE
+         =========================================== -->
+    <section class="slide">
+      <div class="content center">
+        <div class="topline reveal">Почему это важно</div>
+        <h2 class="reveal" style="--d:1">ИИ ускоряет старт. Но выигрывает тот, кто умеет направлять.</h2>
+        <div class="grid g4" style="margin-top:50px">
+          <div class="case reveal" style="--d:2"><h3>Проверка идей</h3><p>лендинг, форма, прототип</p></div>
+          <div class="case reveal" style="--d:3"><h3>Малый бизнес</h3><p>сайт, заявки, WhatsApp</p></div>
+          <div class="case reveal" style="--d:4"><h3>Личный бренд</h3><p>портфолио, услуги, кейсы</p></div>
+          <div class="case reveal" style="--d:5"><h3>Автоматизация</h3><p>меньше ручной рутины</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===========================================
+         SLIDE 6: LESSON FLOW
+         =========================================== -->
+    <section class="slide dark">
+      <div class="content center">
+        <div class="topline reveal">Как пройдет урок</div>
+        <h2 class="reveal" style="--d:1">Сначала пример. Потом практика. Затем разбор.</h2>
+        <div class="grid g3" style="margin-top:54px">
+          <div class="step reveal" style="--d:2"><span class="tag">1</span><h3>Увидим</h3><p>как ИИ собирает первый вариант сайта</p></div>
+          <div class="step reveal" style="--d:3"><span class="tag">2</span><h3>Попробуем</h3><p>сформулировать свой запрос</p></div>
+          <div class="step reveal" style="--d:4"><span class="tag">3</span><h3>Разберем</h3><p>что сработало и что улучшать</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===========================================
+         SLIDE 7: DEMO
+         =========================================== -->
+    <section class="slide accent">
+      <div class="content center">
+        <div class="topline reveal">Живой пример</div>
+        <h2 class="reveal" style="--d:1">Сайт для кофейни в Бишкеке</h2>
+        <div class="split" style="margin-top:42px;height:auto">
+          <div>
+            <p class="lead reveal" style="--d:2;margin-top:0">Задача простая: показать атмосферу, меню, адрес и дать человеку быстрый способ связаться.</p>
+            <div class="pill-row reveal" style="--d:3">
+              <span class="pill">главный экран</span>
+              <span class="pill">меню</span>
+              <span class="pill">отзывы</span>
+              <span class="pill">WhatsApp</span>
+            </div>
+          </div>
+          <div class="mini-browser reveal" style="--d:3">
+            <div class="browser-bar"><i></i><i></i><i></i></div>
+            <div class="browser-body">
+              <div class="mock-hero"><h4>Кофейня “Тепло”</h4><p>кофе, завтраки и спокойное место рядом с вами</p></div>
+              <div class="mock-line mid"></div>
+              <div class="mock-line short"></div>
+              <div class="mock-grid"><div class="mock-tile"></div><div class="mock-tile"></div><div class="mock-tile"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===========================================
+         SLIDE 8: PROMPT FORMULA
+         =========================================== -->
+    <section class="slide">
+      <div class="content center">
+        <div class="topline reveal">Формула запроса</div>
+        <h2 class="reveal" style="--d:1">Хороший промпт похож на понятное задание.</h2>
+        <div class="grid g4" style="margin-top:54px">
+          <div class="step reveal" style="--d:2"><span class="tag">1</span><h3>Кто?</h3><p>бизнес или человек</p></div>
+          <div class="step reveal" style="--d:3"><span class="tag">2</span><h3>Для кого?</h3><p>аудитория сайта</p></div>
+          <div class="step reveal" style="--d:4"><span class="tag">3</span><h3>Что внутри?</h3><p>ключевые блоки</p></div>
+          <div class="step reveal" style="--d:5"><span class="tag">4</span><h3>Что дальше?</h3><p>нужное действие</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===========================================
+         SLIDE 9: PROMPT EXAMPLE
+         =========================================== -->
+    <section class="slide dark">
+      <div class="content center">
+        <div class="topline reveal">Пример</div>
+        <h2 class="reveal" style="--d:1">Сначала просим не “красиво”, а конкретно.</h2>
+        <div class="split left-heavy" style="margin-top:46px;height:auto">
+          <div class="prompt-box reveal" style="--d:2">
+            <div class="label">Промпт</div>
+            <p>Создай одностраничный сайт для уютной кофейни в Бишкеке. Аудитория — студенты и фрилансеры. Нужны: главный экран, меню, отзывы, адрес и кнопка WhatsApp. Стиль — теплый, светлый, современный.</p>
+          </div>
+          <div class="callout reveal" style="--d:3">Чем яснее задача, тем меньше случайности в результате.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===========================================
+         SLIDE 10: CHECK RESULT
+         =========================================== -->
+    <section class="slide">
+      <div class="content center">
+        <div class="topline reveal">Проверка</div>
+        <h2 class="reveal" style="--d:1">Смотрим не как программисты. Смотрим как пользователи.</h2>
+        <div class="check-grid" style="margin-top:50px">
+          <div class="check reveal" style="--d:2"><span></span><p>Понятно, что это за место?</p></div>
+          <div class="check reveal" style="--d:3"><span></span><p>Хочется ли доверять?</p></div>
+          <div class="check reveal" style="--d:4"><span></span><p>Есть ли понятное действие?</p></div>
+          <div class="check reveal" style="--d:5"><span></span><p>Удобно ли открыть с телефона?</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===========================================
+         SLIDE 11: ITERATION
+         =========================================== -->
+    <section class="slide accent">
+      <div class="content center">
+        <div class="topline reveal">Правки</div>
+        <h2 class="reveal" style="--d:1">Вайбкодинг — это диалог с результатом.</h2>
+        <div class="split" style="margin-top:48px;height:auto">
+          <div class="edit-list reveal" style="--d:2">
+            <div class="edit-chip">Сделай первый экран спокойнее и премиальнее.</div>
+            <div class="edit-chip">Добавь меню с тремя популярными напитками.</div>
+            <div class="edit-chip">Усиль кнопку WhatsApp и мобильную версию.</div>
+          </div>
+          <div class="callout reveal" style="--d:3">Не нужно сразу идеально. Нужно уметь видеть, что улучшить следующим шагом.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===========================================
+         SLIDE 12: PRACTICE
+         =========================================== -->
+    <section class="slide">
+      <div class="content center">
+        <div class="topline reveal">Мини-практика</div>
+        <h2 class="reveal" style="--d:1">Теперь попробуем на своей идее.</h2>
+        <div class="practice-board">
+          <div class="practice-card reveal" style="--d:2">
+            <div>
+              <div class="topline" style="margin-bottom:24px;color:var(--lime)">Задача</div>
+              <div class="big">1</div>
+            </div>
+            <p>получить первый черновик и понять, как его улучшать</p>
+          </div>
+          <div class="grid g3">
+            <div class="step reveal" style="--d:3"><span class="tag">1</span><h3>Выбрать идею</h3><p>услуга, эксперт, магазин, курс</p></div>
+            <div class="step reveal" style="--d:4"><span class="tag">2</span><h3>Написать запрос</h3><p>цель, аудитория, блоки, стиль</p></div>
+            <div class="step reveal" style="--d:5"><span class="tag">3</span><h3>Дать правку</h3><p>текст, кнопка, цвет, мобильность</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===========================================
+         SLIDE 13: WHAT HAPPENED
+         =========================================== -->
+    <section class="slide dark">
+      <div class="content center">
+        <div class="topline reveal">Что произошло</div>
+        <div class="big-statement reveal" style="--d:1">Код писал ИИ. Направление задавал человек.</div>
+        <p class="lead reveal" style="--d:2">В этом и есть суть: не заменить мышление, а быстрее доводить идею до видимого результата.</p>
+      </div>
+    </section>
+
+    <!-- ===========================================
+         SLIDE 14: ROLES
+         =========================================== -->
+    <section class="slide">
+      <div class="content center">
+        <div class="topline reveal">Роли</div>
+        <h2 class="reveal" style="--d:1">ИИ помогает делать. Человек отвечает за смысл.</h2>
+        <div class="role-grid">
+          <div class="role ai reveal" style="--d:2">
+            <h3>ИИ</h3>
+            <ul class="clean">
+              <li>собирает структуру</li>
+              <li>пишет код</li>
+              <li>предлагает варианты</li>
+            </ul>
+          </div>
+          <div class="role reveal" style="--d:3">
+            <h3>Человек</h3>
+            <ul class="clean">
+              <li>ставит цель</li>
+              <li>оценивает качество</li>
+              <li>принимает решения</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===========================================
+         SLIDE 15: TERMS
+         =========================================== -->
+    <section class="slide dark">
+      <div class="content center">
+        <div class="topline reveal">Термины без перегруза</div>
+        <h2 class="reveal" style="--d:1">Сложные слова можно перевести на человеческий язык.</h2>
+        <div class="term-grid">
+          <div class="term reveal" style="--d:2"><h3>ИИ-модель</h3><p>помощник, который понимает текст и выполняет задачи</p></div>
+          <div class="term reveal" style="--d:3"><h3>Промпт</h3><p>инструкция: что сделать, для кого и каким должен быть результат</p></div>
+          <div class="term reveal" style="--d:4"><h3>Интеграции</h3><p>когда ИИ подключается к инструментам и помогает с работой</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===========================================
+         SLIDE 16: REALISM
+         =========================================== -->
+    <section class="slide">
+      <div class="content center">
+        <div class="topline reveal">Без иллюзий</div>
+        <h2 class="reveal" style="--d:1">Один запрос не делает навык.</h2>
+        <div class="grid g3" style="margin-top:54px">
+          <div class="card reveal" style="--d:2"><h3>Нужен вкус</h3><p>видеть, что выглядит слабо</p></div>
+          <div class="card reveal" style="--d:3"><h3>Нужна проверка</h3><p>текст, логика, мобильная версия</p></div>
+          <div class="card reveal" style="--d:4"><h3>Нужна система</h3><p>чтобы повторять результат</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===========================================
+         SLIDE 17: COURSE
+         =========================================== -->
+    <section class="slide accent">
+      <div class="content center">
+        <div class="topline reveal">Что дальше</div>
+        <h2 class="reveal" style="--d:1">На курсе этот первый опыт превращается в навык.</h2>
+        <div class="weeks">
+          <div class="week reveal" style="--d:2"><div class="wk">01</div><h3>Промпты</h3><p>учимся ставить задачи ясно</p></div>
+          <div class="week reveal" style="--d:3"><div class="wk">02</div><h3>Сайты</h3><p>лендинги, портфолио, заявки</p></div>
+          <div class="week reveal" style="--d:4"><div class="wk">03</div><h3>Данные</h3><p>формы, клиенты, простая логика</p></div>
+          <div class="week reveal" style="--d:5"><div class="wk">04</div><h3>Проект</h3><p>своя идея до рабочей ссылки</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===========================================
+         SLIDE 18: CLOSING
+         =========================================== -->
+    <section class="slide dark">
+      <div class="content center">
+        <div class="topline reveal">Финал</div>
+        <h2 class="reveal" style="--d:1">Если появилось чувство “я хочу уметь так сам” — это хороший старт.</h2>
+        <p class="lead reveal" style="--d:2">Дальше начинается практика: проекты, правки и уверенность в работе с ИИ.</p>
+        <div class="pill-row reveal" style="--d:3">
+          <span class="pill">создавать</span>
+          <span class="pill">проверять</span>
+          <span class="pill">улучшать</span>
+          <span class="pill">публиковать</span>
+        </div>
+        <img class="footer-logo" src="public/brand/akyltech-logo-white.svg" alt="AkylTech">
+      </div>
+    </section>
+  </main>
+</div>
+
+<script>
+  /* ===========================================
+     SLIDE PRESENTATION CONTROLLER
+     =========================================== */
+  class SlidePresentation{
+    constructor(){
+      this.stage=document.getElementById('deckStage');
+      this.slides=[...document.querySelectorAll('.slide')];
+      this.current=0;
+      this.counter=document.getElementById('counter');
+      this.progress=document.getElementById('progressBar');
+      this.dots=document.getElementById('dots');
+      this.wheelLock=false;
+      this.touchStartX=0;
+      this.touchStartY=0;
+      this.setupScale();
+      this.setupDots();
+      this.setupKeyboard();
+      this.setupWheel();
+      this.setupTouch();
+      this.show(0);
+    }
+
+    setupScale(){
+      const scale=()=>{
+        const factor=Math.min(window.innerWidth/1920,window.innerHeight/1080);
+        const x=(window.innerWidth-1920*factor)/2;
+        const y=(window.innerHeight-1080*factor)/2;
+        this.stage.style.transform=`translate(${x}px, ${y}px) scale(${factor})`;
+      };
+      scale();
+      window.addEventListener('resize',scale);
+    }
+
+    setupDots(){
+      this.dots.innerHTML='';
+      this.slides.forEach((_,index)=>{
+        const button=document.createElement('button');
+        button.type='button';
+        button.setAttribute('aria-label',`Слайд ${index+1}`);
+        button.addEventListener('click',()=>this.show(index));
+        this.dots.appendChild(button);
+      });
+    }
+
+    setupKeyboard(){
+      document.addEventListener('keydown',(event)=>{
+        const nextKeys=['ArrowRight','ArrowDown','PageDown',' '];
+        const prevKeys=['ArrowLeft','ArrowUp','PageUp'];
+        if(nextKeys.includes(event.key)){event.preventDefault();this.next();}
+        if(prevKeys.includes(event.key)){event.preventDefault();this.prev();}
+        if(event.key==='Home'){event.preventDefault();this.show(0);}
+        if(event.key==='End'){event.preventDefault();this.show(this.slides.length-1);}
+      });
+    }
+
+    setupWheel(){
+      window.addEventListener('wheel',(event)=>{
+        if(this.wheelLock || Math.abs(event.deltaY)<24)return;
+        this.wheelLock=true;
+        event.deltaY>0?this.next():this.prev();
+        setTimeout(()=>this.wheelLock=false,520);
+      },{passive:true});
+    }
+
+    setupTouch(){
+      window.addEventListener('touchstart',(event)=>{
+        this.touchStartX=event.changedTouches[0].clientX;
+        this.touchStartY=event.changedTouches[0].clientY;
+      },{passive:true});
+      window.addEventListener('touchend',(event)=>{
+        const dx=event.changedTouches[0].clientX-this.touchStartX;
+        const dy=event.changedTouches[0].clientY-this.touchStartY;
+        if(Math.max(Math.abs(dx),Math.abs(dy))<48)return;
+        if(Math.abs(dx)>Math.abs(dy)){
+          dx<0?this.next():this.prev();
+        }else{
+          dy<0?this.next():this.prev();
+        }
+      },{passive:true});
+    }
+
+    show(index){
+      this.current=Math.max(0,Math.min(index,this.slides.length-1));
+      this.slides.forEach((slide,i)=>{
+        const active=i===this.current;
+        slide.classList.toggle('active',active);
+        slide.classList.toggle('visible',active);
+      });
+      this.counter.textContent=`${String(this.current+1).padStart(2,'0')} / ${String(this.slides.length).padStart(2,'0')}`;
+      this.progress.style.width=`${((this.current+1)/this.slides.length)*100}%`;
+      [...this.dots.children].forEach((button,i)=>button.classList.toggle('active',i===this.current));
+    }
+
+    next(){this.show(this.current+1);}
+    prev(){this.show(this.current-1);}
+  }
+
+  new SlidePresentation();
+</script>
+</body>
+</html>
