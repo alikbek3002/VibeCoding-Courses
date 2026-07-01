@@ -12,7 +12,7 @@ export function Plans() {
         <header className="sec-head plans-head rv">
           <p className="kick mono">{t.pl_kick}</p>
           <h2 className="sec-h">{t.pl_h}</h2>
-          <p className="sec-sub">{t.pl_sub}</p>
+          {t.pl_sub ? <p className="sec-sub">{t.pl_sub}</p> : null}
         </header>
         <SplitPricing />
       </div>

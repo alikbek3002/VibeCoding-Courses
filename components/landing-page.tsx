@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { WHATSAPP_URL } from "@/lib/i18n";
@@ -19,7 +20,7 @@ export function LandingPage({ slug }: { slug: string }) {
         <section className="sec lp-hero">
           <div className="wrap">
             <nav className="crumbs mono" aria-label="Хлебные крошки">
-              <a href="/">Главная</a>
+              <Link href="/">Главная</Link>
               <span aria-hidden="true">/</span>
               <span>{l.crumb}</span>
             </nav>
@@ -35,9 +36,9 @@ export function LandingPage({ slug }: { slug: string }) {
               >
                 Записаться
               </a>
-              <a className="btn btn-line" href="/#plans">
+              <Link className="btn btn-line" href="/#plans">
                 Тарифы и цены
-              </a>
+              </Link>
             </div>
           </div>
         </section>
@@ -75,19 +76,19 @@ export function LandingPage({ slug }: { slug: string }) {
             <h2 className="lp-h2">Смотрите также</h2>
             <div className="lp-also">
               {others.map((o) => (
-                <a className="lp-also-link" href={`/${o.slug}`} key={o.slug}>
+                <Link className="lp-also-link" href={`/${o.slug}`} key={o.slug}>
                   <span className="mono" aria-hidden="true">
                     →
                   </span>
                   {o.navLabel}
-                </a>
+                </Link>
               ))}
-              <a className="lp-also-link" href="/">
+              <Link className="lp-also-link" href="/">
                 <span className="mono" aria-hidden="true">
                   →
                 </span>
                 Главная страница
-              </a>
+              </Link>
             </div>
           </div>
         </section>

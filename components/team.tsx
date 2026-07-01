@@ -7,7 +7,7 @@ import { useLang } from "@/components/lang-provider";
 const PHOTOS: Record<string, string> = {
   "Муканбетов Аликбек": "/team/alikbek-balanced-v2.jpg",
   "Жусупбеков Эрбол": "/team/erbol-balanced-v2.jpg",
-  "Бердибаев Чынгыз": "/team/chyngyz-balanced-v2.jpg",
+  "Бердибаев Чынгыз": "/team/chyngyz-pro.jpg",
   "Миртемиров Эмирхан": "/team/emirkhan-balanced-v2.jpg",
 };
 

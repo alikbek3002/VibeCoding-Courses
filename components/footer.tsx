@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useLang } from "@/components/lang-provider";
 import { WHATSAPP_URL } from "@/lib/i18n";
 import { LANDINGS } from "@/lib/landings";
@@ -23,17 +24,17 @@ export function Footer() {
         </div>
         <nav className="ft-col" aria-label="Разделы">
           <span className="ft-h mono">{t.ft_nav}</span>
-          <a href="/#skills">{t.nav_skills}</a>
-          <a href="/#plans">{t.nav_plans}</a>
-          <a href="/#how">{t.nav_how}</a>
-          <a href="/#works">{t.nav_works}</a>
+          <Link href="/#skills">{t.nav_skills}</Link>
+          <Link href="/#plans">{t.nav_plans}</Link>
+          <Link href="/#how">{t.nav_how}</Link>
+          <Link href="/#works">{t.nav_works}</Link>
         </nav>
         <nav className="ft-col" aria-label="Направления">
           <span className="ft-h mono">Направления</span>
           {LANDINGS.map((l) => (
-            <a href={`/${l.slug}`} key={l.slug}>
+            <Link href={`/${l.slug}`} key={l.slug}>
               {l.navLabel}
-            </a>
+            </Link>
           ))}
         </nav>
         <div className="ft-col">

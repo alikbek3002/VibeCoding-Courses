@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { useLang } from "@/components/lang-provider";
 import { WHATSAPP_URL } from "@/lib/i18n";
@@ -21,20 +22,20 @@ export function Header() {
   return (
     <header className="hdr" ref={hdrRef}>
       <div className="wrap hdr-in">
-        <a href="/" className="logo logo-brand" aria-label="AkylTech">
+        <Link href="/" className="logo logo-brand" aria-label="AkylTech">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/brand/akyltech-logo.svg"
             alt="AkylTech"
             className="logo-img"
           />
-        </a>
+        </Link>
         <nav className="nav" aria-label="Навигация">
-          <a href="/#skills">{t.nav_skills}</a>
-          <a href="/#team">{t.nav_team}</a>
-          <a href="/#works">{t.nav_works}</a>
-          <a href="/#plans">{t.nav_plans}</a>
-          <a href="/#how">{t.nav_how}</a>
+          <Link href="/#skills">{t.nav_skills}</Link>
+          <Link href="/#team">{t.nav_team}</Link>
+          <Link href="/#works">{t.nav_works}</Link>
+          <Link href="/#plans">{t.nav_plans}</Link>
+          <Link href="/#how">{t.nav_how}</Link>
         </nav>
         <div className="hdr-act">
           <a

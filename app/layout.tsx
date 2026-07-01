@@ -15,7 +15,7 @@ const SITE_URL = "https://akyltech.dev";
 const TITLE =
   "AkylTech — курсы вайб-кодинга и ИИ в Бишкеке: сайты и Telegram-боты без кода";
 const DESCRIPTION =
-  "Оффлайн-курсы вайб-кодинга и ИИ в Бишкеке от AkylTech. Научись создавать сайты, лендинги и Telegram-боты с помощью искусственного интеллекта — без программирования. Для всех от 13 до 40 лет. Запись через WhatsApp.";
+  "Курсы вайб-кодинга и ИИ в Бишкеке от AkylTech: онлайн-формат, офлайн-практика, сайты, лендинги и Telegram-боты с помощью искусственного интеллекта — без программирования. Для всех от 13 до 40 лет.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -67,13 +67,13 @@ export const metadata: Metadata = {
     siteName: "AkylTech",
     title: "AkylTech — курсы вайб-кодинга и ИИ в Бишкеке",
     description:
-      "Создавай сайты и Telegram-боты с помощью ИИ, без кода. Оффлайн в Бишкеке, с нуля до проекта в портфолио.",
+      "Создавай сайты и Telegram-боты с помощью ИИ, без кода. Онлайн-формат и оффлайн-практика в Бишкеке, с нуля до проекта в портфолио.",
     url: SITE_URL + "/",
   },
   twitter: {
     card: "summary_large_image",
     title: "AkylTech — курсы вайб-кодинга и ИИ в Бишкеке",
-    description: "Сайты и Telegram-боты с помощью ИИ. Без кода. Оффлайн, Бишкек.",
+    description: "Сайты и Telegram-боты с помощью ИИ. Без кода. Онлайн и оффлайн в Бишкеке.",
   },
   appleWebApp: {
     capable: true,
@@ -88,7 +88,7 @@ export const viewport: Viewport = {
   colorScheme: "light",
 };
 
-// Structured data (@graph): организация + сайт + два курса + FAQ
+// Structured data (@graph): организация + сайт + три формата курса + FAQ
 const ORG_ID = SITE_URL + "/#organization";
 const jsonLd = {
   "@context": "https://schema.org",
@@ -99,7 +99,7 @@ const jsonLd = {
       name: "AkylTech",
       alternateName: "АкылТех",
       description:
-        "Оффлайн-курсы вайб-кодинга и ИИ в Бишкеке: создание сайтов, Telegram-ботов и CRM с помощью ИИ без программирования.",
+        "Курсы вайб-кодинга и ИИ: онлайн-формат и оффлайн-практика в Бишкеке, создание сайтов, Telegram-ботов и CRM с помощью ИИ без программирования.",
       url: SITE_URL + "/",
       logo: SITE_URL + "/brand/icon-512.png",
       image: SITE_URL + "/opengraph-image.png",
@@ -127,7 +127,28 @@ const jsonLd = {
     },
     {
       "@type": "Course",
-      name: "Стандарт вайбкодер — 1 месяц",
+      name: "Онлайн курс вайб-кодинга",
+      description:
+        "Самостоятельный онлайн-формат: записи уроков и материалы для старта в вайб-кодинге, первого сайта, правок и публикации проекта. Без менторской поддержки.",
+      url: SITE_URL + "/#plans",
+      provider: { "@id": ORG_ID },
+      inLanguage: "ru",
+      offers: {
+        "@type": "Offer",
+        price: "150",
+        priceCurrency: "USD",
+        category: "Paid",
+        availability: "https://schema.org/InStock",
+        url: SITE_URL + "/#plans",
+      },
+      hasCourseInstance: {
+        "@type": "CourseInstance",
+        courseMode: "Online",
+      },
+    },
+    {
+      "@type": "Course",
+      name: "Стандарт — 1 месяц",
       description:
         "Первый месяц практики: сайты, лендинги и портфолио через Lovable и Claude, интерактив и деплой на Vercel. Оффлайн в Бишкеке, 3 раза в неделю по 2 часа.",
       url: SITE_URL + "/#plans",
@@ -135,8 +156,8 @@ const jsonLd = {
       inLanguage: "ru",
       offers: {
         "@type": "Offer",
-        price: "30000",
-        priceCurrency: "KGS",
+        price: "300",
+        priceCurrency: "USD",
         category: "Paid",
         availability: "https://schema.org/InStock",
         url: SITE_URL + "/#plans",
@@ -150,7 +171,7 @@ const jsonLd = {
     },
     {
       "@type": "Course",
-      name: "Про вайбкодер — полный курс (2 месяца)",
+      name: "Про — полный курс (2 месяца)",
       description:
         "Полный путь: сайты и лендинги, веб-приложения, Telegram-боты на Python, базы данных и собственная CRM. Claude Code, Supabase, MCP, 21st.dev, деплой на Vercel и Railway. Оффлайн в Бишкеке, 3 раза в неделю.",
       url: SITE_URL + "/#plans",
@@ -188,7 +209,7 @@ const jsonLd = {
           name: "Где и как проходят занятия?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Оффлайн в Бишкеке, 3 раза в неделю по 2 часа. Нужен только ноутбук.",
+            text: "Онлайн-формат проходит в записи. Тарифы «Стандарт» и «Про» проходят оффлайн в Бишкеке, 3 раза в неделю по 2 часа. Нужен только ноутбук.",
           },
         },
         {
@@ -196,7 +217,7 @@ const jsonLd = {
           name: "Сколько стоит обучение?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Тариф «Стандарт» (1 месяц) — $300, тариф «Про» (весь курс, 2 месяца) — $500.",
+            text: "Онлайн-формат — $150, тариф «Стандарт» (1 месяц) — $300, тариф «Про» (весь курс, 2 месяца) — $500.",
           },
         },
         {
